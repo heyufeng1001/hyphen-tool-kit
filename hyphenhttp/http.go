@@ -1,8 +1,8 @@
-// Package util
+// Package hyphenhttp
 // Author: hyphen
 // Copyright 2022 hyphen. All rights reserved.
 // Create-time: 2022/7/18
-package util
+package hyphenhttp
 
 import (
 	"bytes"

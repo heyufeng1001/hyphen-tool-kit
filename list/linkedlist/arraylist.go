@@ -80,7 +80,8 @@ func (l *LinkedList[T]) MoveToFront(value T) error {
 }
 
 func (l *LinkedList[T]) PopBottom() (T, error) {
-	return util.TernaryForm(l.Len() == 0, func() (T, error) { return nil, errors.New("[PopBottom]list is empty") },
+	var ret T
+	return util.TernaryForm(l.Len() == 0, func() (T, error) { return ret, errors.New("[PopBottom]list is empty") },
 		func() (T, error) {
 			ret := l.bottom
 			util.TernaryForm(l.Len() == 1, func() { l.head, l.bottom = nil, nil }, func() { l.bottom.prev.next, l.bottom = nil, l.bottom.prev })()
