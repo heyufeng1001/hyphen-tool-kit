@@ -28,11 +28,11 @@ func NewLRUCache[K comparable, V any](maxCacheSize int, remoteGet func(K, ...any
 	}
 }
 
-func (l *LRUCache[K, V]) Get(key K) (V, error) {
+func (l *LRUCache[K, V]) Get(key K, extra ...any) (V, error) {
 	var err error
 	value, ok := l.valueMap.Get(key)
 	if !ok {
-		value, err = l.remoteGet(key)
+		value, err = l.remoteGet(key, extra...)
 	}
 	if err != nil {
 		go l.update(key, value, ok)
