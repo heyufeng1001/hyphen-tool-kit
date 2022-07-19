@@ -13,11 +13,11 @@ type LRUCache[K comparable, V any] struct {
 	maxCacheSize, size int
 	valueMap           *concurrentmap.ConcurrentMap[K, V]
 	keyList            *linkedlist.LinkedList[K]
-	remoteGet          func(K) (V, error)
+	remoteGet          func(K, ...any) (V, error)
 	autoUpdate         bool
 }
 
-func NewLRUCache[K comparable, V any](maxCacheSize int, remoteGet func(K) (V, error), autoUpdate bool) *LRUCache[K, V] {
+func NewLRUCache[K comparable, V any](maxCacheSize int, remoteGet func(K, ...any) (V, error), autoUpdate bool) *LRUCache[K, V] {
 	return &LRUCache[K, V]{
 		maxCacheSize: maxCacheSize,
 		size:         0,
