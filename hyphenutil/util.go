@@ -1,8 +1,8 @@
-// Package util
+// Package hyphenutil
 // Author: hyphen
 // Copyright 2022 hyphen. All rights reserved.
 // Create-time: 2022/7/8
-package util
+package hyphenutil
 
 func TernaryForm[T any](condition bool, trueVal, falseVal T) T {
 	if condition {
@@ -16,4 +16,11 @@ func TernaryFormInterface(condition bool, trueVal, falseVal interface{}) interfa
 		return trueVal
 	}
 	return falseVal
+}
+
+func ParseVariableBools(flag ...bool) (ret bool) {
+	if len(flag) > 0 && flag[0] {
+		ret = true
+	}
+	return
 }

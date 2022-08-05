@@ -7,7 +7,7 @@ package linkedlist
 import (
 	"errors"
 
-	"github.com/heyufeng1001/hyphen-tool-kit/util"
+	"github.com/heyufeng1001/hyphen-tool-kit/hyphenutil"
 )
 
 type element[T comparable] struct {
@@ -81,10 +81,10 @@ func (l *LinkedList[T]) MoveToFront(value T) error {
 
 func (l *LinkedList[T]) PopBottom() (T, error) {
 	var ret T
-	return util.TernaryForm(l.Len() == 0, func() (T, error) { return ret, errors.New("[PopBottom]list is empty") },
+	return hyphenutil.TernaryForm(l.Len() == 0, func() (T, error) { return ret, errors.New("[PopBottom]list is empty") },
 		func() (T, error) {
 			ret := l.bottom
-			util.TernaryForm(l.Len() == 1, func() { l.head, l.bottom = nil, nil }, func() { l.bottom.prev.next, l.bottom = nil, l.bottom.prev })()
+			hyphenutil.TernaryForm(l.Len() == 1, func() { l.head, l.bottom = nil, nil }, func() { l.bottom.prev.next, l.bottom = nil, l.bottom.prev })()
 			l.size--
 			return ret.value, nil
 		},

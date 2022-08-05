@@ -5,8 +5,8 @@
 package lrucache
 
 import (
-	"github.com/heyufeng1001/hyphen-tool-kit/list/linkedlist"
-	"github.com/heyufeng1001/hyphen-tool-kit/map/concurrentmap"
+	"github.com/heyufeng1001/hyphen-tool-kit/collection/list/linkedlist"
+	"github.com/heyufeng1001/hyphen-tool-kit/collection/map/concurrentmap"
 )
 
 type LRUCache[K comparable, V any] struct {
