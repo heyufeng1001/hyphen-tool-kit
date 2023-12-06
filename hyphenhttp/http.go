@@ -11,9 +11,55 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os/exec"
+
+	"github.com/sirupsen/logrus"
 )
 
 var client = &http.Client{}
+
+func AccessBySystemCall[T any](ctx context.Context, url string, method string, header map[string]string,
+	param map[string]string, body any) (T, error) {
+	var ret T
+	sb := bytes.Buffer{}
+	sb.WriteString(url)
+	sb.WriteByte('?')
+	for k, v := range param {
+		sb.WriteString(k)
+		sb.WriteByte('=')
+		sb.WriteString(v)
+		sb.WriteByte('&')
+	}
+	args := []string{"--location", "--request", method, sb.String()}
+
+	bodyJSON, err := json.Marshal(body)
+	if err != nil {
+		return ret, err
+	}
+	if len(bodyJSON) != 0 {
+		args = append(args, []string{"--data-raw", `'` + string(bodyJSON) + `''`}...)
+	}
+
+	if header != nil {
+		for k, v := range header {
+			args = append(args, []string{`--header`, `'` + k + `: ` + v + `'`}...)
+		}
+	}
+
+	cmd := exec.Command("curl", args...)
+	var stdout bytes.Buffer
+	cmd.Stdout = &stdout
+	logrus.Infof("[AccessBySystemCall]prepared to execute: %s", cmd.String())
+	err = cmd.Run()
+	if err != nil {
+		return ret, fmt.Errorf("[AccessBySystemCall]exec cmd failed: %w", err)
+	}
+	err = json.Unmarshal(stdout.Bytes(), &ret)
+	if err != nil {
+		return ret, fmt.Errorf("[AccessBySystemCall]unmarshal stdout failed: %w", err)
+	}
+	return ret, nil
+}
 
 func AccessResp(ctx context.Context, url string, method string, header map[string]string, param map[string]string,
 	body any, setAuthorization func(*http.Request)) (*http.Response, error) {
@@ -32,7 +78,7 @@ func Access[T any](ctx context.Context, url string, method string, header map[st
 	if err != nil {
 		return ret, fmt.Errorf("read resp body failed: %w", err)
 	}
-	if !isSuccess(resp) {
+	if isSuccess != nil && !isSuccess(resp) {
 		return ret, fmt.Errorf("is success return false: %s", string(respBody))
 	}
 	err = json.Unmarshal(respBody, &ret)

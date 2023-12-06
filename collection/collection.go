@@ -4,5 +4,6 @@
 // Create-time: 2022/8/5
 package collection
 
-type Collection interface {
+type Collection[T any] interface {
+	Insert(value T)
 }
